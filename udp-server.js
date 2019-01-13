@@ -1,25 +1,22 @@
-var PORT = 33333;
-var HOST = '127.0.0.1';
+// require is a sort of dependency injection
 
-var dgram = require('dgram');
-var server = dgram.createSocket('udp4');
+var dgram = require('dgram'); // pre built in functionality from node.js
+var helpers = require('helpers.js'); // imports our helper.js
+var config = require('config.js'); // imports our config.js
 
-function sendBack(message, address, port){
-    if(message > 100){
-        return;
-    }
-    server.send(message.toString(), 0, message.toString().length, port, address);
+var server = dgram.createSocket('udp4'); // create a UDP socket
+
+helpers.attachAnswerListener(server, true); // attach the listener for messages
+
+startServer();
+
+function startServer() {
+    // this following listener is not really necessary, it's just to log that the server is up and listening to the console once that event fires
+    server.on('listening', function () {
+        var address = server.address();
+        console.log('UDP Server listening on ' + address.address + ":" + address.port);
+    });
+
+    // this is where we actually start the server:
+    server.bind(config.PORT, config.ADDRESS);
 }
-
-server.on('listening', function () {
-    var address = server.address();
-    console.log('UDP Server listening on ' + address.address + ":" + address.port);
-});
-
-server.on('message', function (message, remote) {
-    sendBack(parseInt(message)+1, remote.address, remote.port);
-    console.log(remote.address + ':' + remote.port +' - ' + message);
-});
-
-
-server.bind(PORT, HOST);
