@@ -1,8 +1,8 @@
 // require is a sort of dependency injection
 
 var dgram = require('dgram'); // pre built in functionality from node.js
-var helpers = require('helpers.js'); // imports our helper.js
-var config = require('config.js'); // imports our config.js
+var helpers = require('./helpers.js'); // imports our helper.js
+var config = require('./config.js'); // imports our config.js
 
 var server = dgram.createSocket('udp4'); // create a UDP socket
 
@@ -18,5 +18,5 @@ function startServer() {
     });
 
     // this is where we actually start the server:
-    server.bind(config.PORT, config.ADDRESS);
+    server.bind(config.RUN_SERVER_AT_PORT, config.RUN_SERVER_AT_ADDRESS);
 }

@@ -1,16 +1,3 @@
-
-/**  
- * Sends a message using a 
- * @param socket  socket instance
- * @param datagramPacket contains all the information needed about message, port, address
-*/
-function sendMessage(socket, datagramPacket) {
-    socket.send(datagramPacket.buffer, 0, datagramPacket.bufferLength, datagramPacket.port, datagramPacket.address, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message ' + datagramPacket.buffer.toString() + ' sent to ' + HOST +':'+ PORT);
-    });
-}
-
 /**  
  * creates a datagramPacket (for simulating a closer implementation to the Java way)
  * @param message primitive type of message which is going to be converted to a string and then Buffer
@@ -25,6 +12,18 @@ function createDatagramPacket(message, address, port) {
         address: address,
         port: port
     };
+}
+
+ /**  
+ * Sends a message using a 
+ * @param socket  socket instance
+ * @param datagramPacket contains all the information needed about message, port, address
+*/
+function sendMessage(socket, datagramPacket) {
+    socket.send(datagramPacket.buffer, 0, datagramPacket.bufferLength, datagramPacket.port, datagramPacket.address, function(err, bytes) {
+        if (err) throw err;
+        console.log('UDP message ' + datagramPacket.buffer.toString() + ' sent to ' + datagramPacket.address +':'+  datagramPacket.port);
+    });
 }
 
 /**  
@@ -50,3 +49,9 @@ function attachAnswerListener(socket, isServer) {
         }
     });
 }
+
+module.exports = {  // needed for require DI import to work
+    createDatagramPacket: createDatagramPacket,
+    sendMessage: sendMessage,
+    attachAnswerListener: attachAnswerListener,
+};
